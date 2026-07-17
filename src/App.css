@@ -73,6 +73,14 @@ body {
   box-shadow: 0 8px 18px rgba(45, 106, 79, 0.25);
 }
 
+.brand-logo {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 16px;
+  box-shadow: 0 8px 18px rgba(45, 106, 79, 0.16);
+}
+
 .logo h1,
 .logo-text-title {
   margin: 0;
@@ -520,6 +528,30 @@ body {
   margin: 1.2rem 0 1.2rem;
 }
 
+.size-selector-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.size-option {
+  border: 1px solid rgba(45, 106, 79, 0.16);
+  background: var(--cream);
+  color: var(--primary-dark);
+  padding: 0.6rem 0.8rem;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.size-option.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 10px 22px rgba(45, 106, 79, 0.2);
+}
+
 .price-row {
   display: flex;
   align-items: center;
@@ -720,6 +752,87 @@ textarea {
   padding: 1rem;
   border-radius: 1rem;
   background: var(--cream);
+}
+
+.chat-toggle {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #76c893);
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 14px 30px rgba(45, 106, 79, 0.24);
+  cursor: pointer;
+  z-index: 220;
+}
+
+.chat-panel {
+  position: fixed;
+  right: 1rem;
+  bottom: 5rem;
+  width: min(340px, calc(100% - 2rem));
+  background: white;
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  z-index: 220;
+}
+
+.chat-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0.75rem;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white;
+}
+
+.chat-panel-header h3 {
+  margin: 0 0 0.2rem;
+  font-size: 1rem;
+}
+
+.chat-panel-header p {
+  margin: 0;
+  font-size: 0.82rem;
+  opacity: 0.9;
+}
+
+.chat-close {
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.chat-body {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1rem;
+}
+
+.chat-bubble {
+  padding: 0.75rem 0.9rem;
+  border-radius: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.chat-bubble.bot {
+  background: var(--cream);
+  color: var(--text);
+}
+
+.chat-bubble.user {
+  background: rgba(45, 106, 79, 0.12);
+  color: var(--primary-dark);
+  margin-left: 1rem;
 }
 
 .main-footer {

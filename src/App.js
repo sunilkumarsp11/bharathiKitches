@@ -70,6 +70,13 @@ const ingredients = [
   },
 ];
 
+const sizeOptions = [
+  { label: '250g', value: 250, price: 140 },
+  { label: '500g', value: 500, price: 250 },
+  { label: '750g', value: 750, price: 360 },
+  { label: '1kg', value: 1000, price: 450 },
+];
+
 const initialForm = {
   name: '',
   phone: '',
@@ -82,6 +89,8 @@ const initialForm = {
 function App() {
   const [expandedCard, setExpandedCard] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(sizeOptions[1]);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [formValues, setFormValues] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -123,7 +132,7 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-  const total = quantity * 250;
+  const total = quantity * selectedSize.price;
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -174,7 +183,8 @@ function App() {
     const submitted = {
       name: formValues.name.trim(),
       quantity,
-      total: quantity * 250,
+      size: selectedSize.label,
+      total: quantity * selectedSize.price,
       paymentMethod: formValues.paymentMethod,
     };
 
@@ -191,7 +201,7 @@ function App() {
       <header className="main-header" id="main-header">
         <div className="container header-container">
           <a href="#hero" className="logo">
-            <span className="logo-icon"><i className="fa-solid fa-leaf"></i></span>
+            <img src="/logo/logo.svg" alt="Bharathi's Kitchen logo" className="brand-logo" />
             <div className="logo-text">
               <h1>Bharathi&apos;s Kitchen</h1>
               <span className="tagline">Wholesome | Natural | Homemade</span>
@@ -236,9 +246,9 @@ function App() {
                   <span className="jar-body"></span>
                 </div>
                 <div className="product-details">
-                  <h3>500g Jar</h3>
+                  <h3>{selectedSize.label} Jar</h3>
                   <p>Multi-grain health mix</p>
-                  <span>₹250</span>
+                  <span>₹{selectedSize.price}</span>
                 </div>
               </div>
               <div className="glass-tag ratings-tag"><i className="fa-solid fa-heart"></i><span>Loved by 500+ Families</span></div>
@@ -332,13 +342,26 @@ function App() {
               <div className="order-promo-badge"><i className="fa-solid fa-fire"></i> Freshly Roasted Batch</div>
               <h2>Order Fresh Sathu Maavu</h2>
               <p className="promo-text">
-                Order your 500g jar of wholesome multi-grain health drink mix and enjoy a fresh, home-blended experience at your doorstep.
+                Order your {selectedSize.label} jar of wholesome multi-grain health drink mix and enjoy a fresh, home-blended experience at your doorstep.
               </p>
 
               <div className="pricing-card">
+                <div className="size-selector-group" role="group" aria-label="Choose pack size">
+                  {sizeOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      className={`size-option ${selectedSize.value === option.value ? 'active' : ''}`}
+                      onClick={() => setSelectedSize(option)}
+                      aria-label={option.label}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
                 <div className="price-row">
-                  <span className="item-name">Health Drink Mix (500g Jar)</span>
-                  <span className="item-unit-price">₹250</span>
+                  <span className="item-name">Health Drink Mix ({selectedSize.label} Jar)</span>
+                  <span className="item-unit-price">₹{selectedSize.price}</span>
                 </div>
                 <div className="price-row delivery-row">
                   <span>Delivery Partner Fee</span>
@@ -405,7 +428,7 @@ function App() {
 
                   <div className="form-row-2">
                     <div className="form-group">
-                      <label htmlFor="order-quantity">Quantity (500g Jar) <span className="required">*</span></label>
+                      <label htmlFor="order-quantity">Quantity ({selectedSize.label} Jar) <span className="required">*</span></label>
                       <div className="quantity-selector">
                         <button type="button" className="btn-qty" onClick={() => handleQuantityChange(-1)}><i className="fa-solid fa-minus"></i></button>
                         <input id="order-quantity" name="quantity" type="number" value={quantity} readOnly />
@@ -458,6 +481,7 @@ function App() {
             {summary && (
               <div className="summary-details">
                 <p><strong>Customer:</strong> {summary.name}</p>
+                <p><strong>Pack:</strong> {summary.size}</p>
                 <p><strong>Quantity:</strong> {summary.quantity} Jar(s)</p>
                 <p><strong>Total Bill:</strong> ₹{summary.total}</p>
               </div>
@@ -471,7 +495,7 @@ function App() {
         <div className="container footer-grid">
           <div className="footer-brand">
             <a href="#hero" className="logo">
-              <span className="logo-icon"><i className="fa-solid fa-leaf"></i></span>
+              <img src="/logo/logo.svg" alt="Bharathi's Kitchen logo" className="brand-logo" />
               <span className="logo-text-title">Bharathi&apos;s Kitchen</span>
             </a>
             <p>100% natural, home-blended health mixes using premium organic millets and dry fruits.</p>
@@ -498,6 +522,29 @@ function App() {
           </div>
         </div>
       </footer>
+
+      <button type="button" className="chat-toggle" onClick={() => setIsChatOpen((prev) => !prev)} aria-label="Chat with Bharathi">
+        <i className="fa-solid fa-comments"></i>
+      </button>
+
+      {isChatOpen && (
+        <div className="chat-panel" role="dialog" aria-label="Chat assistant">
+          <div className="chat-panel-header">
+            <div>
+              <h3>Chat with Bharathi</h3>
+              <p>Ask about ingredients, delivery, or pack sizes.</p>
+            </div>
+            <button type="button" className="chat-close" onClick={() => setIsChatOpen(false)} aria-label="Close chat">
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div className="chat-body">
+            <div className="chat-bubble bot">Hello! I can help you choose the right pack size or answer questions about the mix.</div>
+            <div className="chat-bubble user">What is the best option for a family?</div>
+            <div className="chat-bubble bot">The 500g jar is ideal for regular family use, while 1kg is perfect for larger households or gifting.</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
