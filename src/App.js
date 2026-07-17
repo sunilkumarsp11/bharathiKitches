@@ -194,14 +194,22 @@ function App() {
 
     if (lower.includes('price') || lower.includes('cost')) {
       botText = `Our packet prices start at ₹${sizeOptions[0].price} for 250g and go up to ₹${sizeOptions[3].price} for 1kg.`;
+    } else if (lower.includes('what is this product') || lower.includes('product about') || lower.includes('about this product') || lower.includes('tell me more')) {
+      botText = 'Bharathi\'s Kitchen offers a wholesome, homemade multi-grain health mix made with 24 naturally sourced ingredients. It is carefully blended to support daily nutrition, energy, digestion, and family wellness in a simple, everyday way.';
     } else if (lower.includes('ingredient') || lower.includes('made of') || lower.includes('contains')) {
       botText = 'Bharathi\'s Kitchen uses 24 naturally sourced ingredients, including millets, nuts, seeds, grains, legumes, and warming spices.';
     } else if (lower.includes('healthy') || lower.includes('benefit') || lower.includes('good for')) {
-      botText = 'It is a wholesome multi-grain mix that supports daily nutrition, energy, digestion, and family wellness.';
+      botText = 'It is a wholesome, homemade multi-grain mix made with 24 natural ingredients. It is designed to support daily nutrition, energy, digestion, and overall family wellness in a simple, everyday way.';
     } else if (lower.includes('size') || lower.includes('packet')) {
-      botText = 'We offer 250g, 500g, 750g, and 1kg packets. The 500g packet is a popular family choice.';
+      botText = 'We offer 250g, 500g, 750g, and 1kg packets. The 500g packet is a popular family choice, while 1kg works well for larger households or gifting.';
     } else if (lower.includes('order') || lower.includes('buy') || lower.includes('place')) {
       botText = 'You can choose a packet size above and fill the order form to place your order. I can also help you pick the right size.';
+    } else if (lower.includes('kid') || lower.includes('child') || lower.includes('children')) {
+      botText = 'Many families enjoy it as part of a nourishing daily routine, especially when they want a wholesome homemade option for their loved ones.';
+    } else if (lower.includes('sugar') || lower.includes('sweet')) {
+      botText = 'This mix is crafted to be a natural, wholesome option without relying on artificial sweetness or unnecessary additives.';
+    } else if (lower.includes('delivery') || lower.includes('ship')) {
+      botText = 'We offer doorstep delivery, and the order form makes it easy to share your address and preferred payment method.';
     } else if (lower.includes('name')) {
       botText = 'We would love to know your name. Please enter it in the order form so we can confirm your order.';
     }
@@ -250,7 +258,7 @@ function App() {
       <header className="main-header" id="main-header">
         <div className="container header-container">
           <a href="#hero" className="logo">
-            <img src="/logo/logo.svg" alt="Bharathi's Kitchen logo" className="brand-logo" />
+            <img src={`${process.env.PUBLIC_URL}/logo/logo-circle.svg`} alt="Bharathi's Kitchen logo" className="brand-logo" />
             <div className="logo-text">
               <h1>Bharathi&apos;s Kitchen</h1>
               <span className="tagline">Wholesome | Natural | Homemade</span>
@@ -544,7 +552,7 @@ function App() {
         <div className="container footer-grid">
           <div className="footer-brand">
             <a href="#hero" className="logo">
-              <img src="/logo/logo.svg" alt="Bharathi's Kitchen logo" className="brand-logo" />
+              <img src={`${process.env.PUBLIC_URL}/logo/logo-circle.svg`} alt="Bharathi's Kitchen logo" className="brand-logo" />
               <span className="logo-text-title">Bharathi&apos;s Kitchen</span>
             </a>
             <p>100% natural, home-blended health mixes using premium organic millets and dry fruits.</p>
@@ -573,7 +581,9 @@ function App() {
       </footer>
 
       <button type="button" className="chat-toggle" onClick={() => setIsChatOpen((prev) => !prev)} aria-label="Chat with Bharathi">
-        <i className="fa-solid fa-comments"></i>
+        <span className="chat-toggle-icon">
+          <img src={`${process.env.PUBLIC_URL}/logo/logo-circle.svg`} alt="Bharathi's Kitchen bot" className="chat-bot-icon" />
+        </span>
       </button>
 
       {isChatOpen && (
