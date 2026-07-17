@@ -696,6 +696,15 @@ textarea {
   border-radius: 50%;
   background: white;
   cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.qty-sign {
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--primary-dark);
 }
 
 .btn-submit {
@@ -815,6 +824,30 @@ textarea {
   display: grid;
   gap: 0.7rem;
   padding: 1rem;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.chat-input-row input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.7rem 0.85rem;
+  background: var(--cream);
+}
+
+.chat-send-btn {
+  border: none;
+  border-radius: 999px;
+  background: var(--primary);
+  color: white;
+  padding: 0.7rem 0.9rem;
+  cursor: pointer;
+  font-weight: 700;
 }
 
 .chat-bubble {

@@ -91,6 +91,14 @@ function App() {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(sizeOptions[1]);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 1,
+      role: 'bot',
+      text: 'Hello! I can help you choose a packet size, explain the product, or help place an order.',
+    },
+  ]);
+  const [chatInput, setChatInput] = useState('');
   const [formValues, setFormValues] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -165,6 +173,47 @@ function App() {
 
     setErrors(nextErrors);
     return nextErrors;
+  };
+
+  const handleChatSubmit = (event) => {
+    event.preventDefault();
+    const trimmed = chatInput.trim();
+
+    if (!trimmed) {
+      return;
+    }
+
+    const userMessage = {
+      id: Date.now(),
+      role: 'user',
+      text: trimmed,
+    };
+
+    const lower = trimmed.toLowerCase();
+    let botText = 'Thanks! Please share your name and phone number in the order form if you want us to prepare your packet order.';
+
+    if (lower.includes('price') || lower.includes('cost')) {
+      botText = `Our packet prices start at ₹${sizeOptions[0].price} for 250g and go up to ₹${sizeOptions[3].price} for 1kg.`;
+    } else if (lower.includes('ingredient') || lower.includes('made of') || lower.includes('contains')) {
+      botText = 'Bharathi\'s Kitchen uses 24 naturally sourced ingredients, including millets, nuts, seeds, grains, legumes, and warming spices.';
+    } else if (lower.includes('healthy') || lower.includes('benefit') || lower.includes('good for')) {
+      botText = 'It is a wholesome multi-grain mix that supports daily nutrition, energy, digestion, and family wellness.';
+    } else if (lower.includes('size') || lower.includes('packet')) {
+      botText = 'We offer 250g, 500g, 750g, and 1kg packets. The 500g packet is a popular family choice.';
+    } else if (lower.includes('order') || lower.includes('buy') || lower.includes('place')) {
+      botText = 'You can choose a packet size above and fill the order form to place your order. I can also help you pick the right size.';
+    } else if (lower.includes('name')) {
+      botText = 'We would love to know your name. Please enter it in the order form so we can confirm your order.';
+    }
+
+    const botMessage = {
+      id: Date.now() + 1,
+      role: 'bot',
+      text: botText,
+    };
+
+    setChatMessages((prev) => [...prev, userMessage, botMessage]);
+    setChatInput('');
   };
 
   const handleSubmit = (event) => {
@@ -246,7 +295,7 @@ function App() {
                   <span className="jar-body"></span>
                 </div>
                 <div className="product-details">
-                  <h3>{selectedSize.label} Jar</h3>
+                  <h3>{selectedSize.label} Packet</h3>
                   <p>Multi-grain health mix</p>
                   <span>₹{selectedSize.price}</span>
                 </div>
@@ -342,7 +391,7 @@ function App() {
               <div className="order-promo-badge"><i className="fa-solid fa-fire"></i> Freshly Roasted Batch</div>
               <h2>Order Fresh Sathu Maavu</h2>
               <p className="promo-text">
-                Order your {selectedSize.label} jar of wholesome multi-grain health drink mix and enjoy a fresh, home-blended experience at your doorstep.
+                Order your {selectedSize.label} packet of wholesome multi-grain health drink mix and enjoy a fresh, home-blended experience at your doorstep.
               </p>
 
               <div className="pricing-card">
@@ -360,7 +409,7 @@ function App() {
                   ))}
                 </div>
                 <div className="price-row">
-                  <span className="item-name">Health Drink Mix ({selectedSize.label} Jar)</span>
+                  <span className="item-name">Health Drink Mix ({selectedSize.label} Packet)</span>
                   <span className="item-unit-price">₹{selectedSize.price}</span>
                 </div>
                 <div className="price-row delivery-row">
@@ -428,11 +477,11 @@ function App() {
 
                   <div className="form-row-2">
                     <div className="form-group">
-                      <label htmlFor="order-quantity">Quantity ({selectedSize.label} Jar) <span className="required">*</span></label>
+                      <label htmlFor="order-quantity">Quantity ({selectedSize.label} Packet) <span className="required">*</span></label>
                       <div className="quantity-selector">
-                        <button type="button" className="btn-qty" onClick={() => handleQuantityChange(-1)}><i className="fa-solid fa-minus"></i></button>
+                        <button type="button" className="btn-qty" onClick={() => handleQuantityChange(-1)} aria-label="Decrease quantity"><span className="qty-sign">−</span></button>
                         <input id="order-quantity" name="quantity" type="number" value={quantity} readOnly />
-                        <button type="button" className="btn-qty" onClick={() => handleQuantityChange(1)}><i className="fa-solid fa-plus"></i></button>
+                        <button type="button" className="btn-qty" onClick={() => handleQuantityChange(1)} aria-label="Increase quantity"><span className="qty-sign">+</span></button>
                       </div>
                     </div>
                     <div className="form-group">
@@ -482,7 +531,7 @@ function App() {
               <div className="summary-details">
                 <p><strong>Customer:</strong> {summary.name}</p>
                 <p><strong>Pack:</strong> {summary.size}</p>
-                <p><strong>Quantity:</strong> {summary.quantity} Jar(s)</p>
+                <p><strong>Quantity:</strong> {summary.quantity} Packet(s)</p>
                 <p><strong>Total Bill:</strong> ₹{summary.total}</p>
               </div>
             )}
@@ -539,9 +588,21 @@ function App() {
             </button>
           </div>
           <div className="chat-body">
-            <div className="chat-bubble bot">Hello! I can help you choose the right pack size or answer questions about the mix.</div>
-            <div className="chat-bubble user">What is the best option for a family?</div>
-            <div className="chat-bubble bot">The 500g jar is ideal for regular family use, while 1kg is perfect for larger households or gifting.</div>
+            {chatMessages.map((message) => (
+              <div key={message.id} className={`chat-bubble ${message.role}`}>
+                {message.text}
+              </div>
+            ))}
+            <form className="chat-input-row" onSubmit={handleChatSubmit}>
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(event) => setChatInput(event.target.value)}
+                placeholder="Ask about packets or ordering"
+                aria-label="Chat message"
+              />
+              <button type="submit" className="chat-send-btn">Send</button>
+            </form>
           </div>
         </div>
       )}
